@@ -1,6 +1,6 @@
-import { sendMail } from '../../utils/mailer';
-import { inngest } from '../client';
-import UserModel from '../../models/User';
+import { sendMail } from '../../utils/mailer.js';
+import { inngest } from '../client.js';
+import UserModel from '../../models/User.js';
 import { NonRetriableError } from 'inngest';
 
 export const onUserSignUp = inngest.createFunction(
@@ -33,7 +33,7 @@ export const onUserSignUp = inngest.createFunction(
 
       return { success: true };
     } catch (err) {
-      console.error("❌ Error running step", err.message);
+      console.error("❌ Error running step on user Signup", err.message);
       return { success: false };
     }
   }

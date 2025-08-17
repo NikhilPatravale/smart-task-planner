@@ -6,10 +6,11 @@ const ticketSchema = new mongoose.Schema({
   status: { type: String, default: "TODO", enum: ["TODO", "IN PROGRESS", "COMPLETE"] },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+  helpfulNotes: String,
   priority: String,
   deadline: String,
   relatedSkills: [String],
   createdAt: { type: Date, default: Date.now },
 });
 
-export default new mongoose.model("Ticket", ticketSchema);
+export default mongoose.model("Ticket", ticketSchema);
