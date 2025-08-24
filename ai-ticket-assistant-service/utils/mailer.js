@@ -12,7 +12,7 @@ export const sendMail = async (to, subject, text) => {
     });
 
     const info = await transporter.sendMail({
-      from: 'noreaply@ticket-tracker',
+      from: 'Smart Ticket Manager <noreply@demomailtrap.co>',
       to,
       subject,
       text,
@@ -21,5 +21,6 @@ export const sendMail = async (to, subject, text) => {
     return info;
   } catch (err) {
     console.error("❌ Error during sending mail", err.message);
+    return { error: 'Error during sending mail', message: err.message };
   }
 };

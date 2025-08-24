@@ -22,26 +22,33 @@ export const getAIResponse = async (ticket) => {
     }),
   });
 
-  const aiResponse = await ticketManagerAgent.run(`
+  console.log(`\n🤖AI agent created successfully\n${JSON.stringify(ticketManagerAgent)}`);
+
+  try {
+    const aiResponse = await ticketManagerAgent.run(`
     Analyze the ticket with your expertise and provide your analysis response strictly in JSON format as per example below:
-    e.g. { helpfulNotes: "", relatedSkills: ["React", "Spring", "Java"], priority: "High" }
+  e.g. { helpfulNotes: "", relatedSkills: ["React", "Spring", "Java"], priority: "High" }
 
     Importantly note that the output should be strictly in JSON format only.
 
     ------------------
-    
+
     Ticket Information:
-    Title: ${ticket.title},
-    Description: ${ticket.description}
+  Title: ${ticket.title}
+  Description: ${ticket.description}
   `);
 
-  try {
-    const rawData = aiResponse.output[0].content;
-    console.log('Entire Response: ', aiResponse);
+    console.log(`\n🤖 Original AI Response from model: \n${JSON.stringify(aiResponse)} \n`);
 
-    return rawData;
+    const rawData = aiResponse.output[0].content;
+
+    const formattedRawData = JSON.parse(rawData.replace(/```json | ```/g, "").trim());
+
+    console.log(`\n✅ Formatted AI Response: \n${JSON.stringify(formattedRawData)} \n`);
+
+    return formattedRawData;
   } catch (error) {
-    console.error("❌ Error generating AI response");
+    console.error("❌ Error generating AI response", error);
     return null;
   }
 };

@@ -33,7 +33,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/ticket", ticketRoutes);
 
-app.use("/api/ingest", serve({
+app.use("/api/inngest", serve({
   client: inngest,
   functions: [onUserSignUp, onTicketCreation],
 }))

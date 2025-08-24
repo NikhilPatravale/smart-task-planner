@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import UserModel from '../models/User.js';
+import { inngest } from "../inngest/client.js";
 import jwt from 'jsonwebtoken';
 
 export const SignUp = async (req, res) => {
@@ -101,6 +102,25 @@ export const LogIn = async (req, res) => {
         skills: user.skills,
         createdAt: user.createdAt,
       }
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'LogIn failed',
+      details: error.message,
+    });
+  }
+};
+
+export const LogOut = async (req, res) => {
+  try {
+    res.clearCookie('taskToken', {
+      maxAge: 60 * 1000 * 60,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return res.status(200).json({
+      message: "Logout successful"
     });
   } catch (error) {
     res.status(500).json({

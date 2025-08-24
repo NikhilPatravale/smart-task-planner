@@ -1,4 +1,5 @@
 import TicketModel from "../models/Ticket.js";
+import { inngest } from "../inngest/client.js";
 
 export const CreateTicket = async (req, res) => {
   try {
@@ -64,22 +65,22 @@ export const GetTickets = async (req, res) => {
 
 export const GetTicket = async (req, res) => {
   try {
-    const ticketId = req.param.id;
+    const ticketId = req.params.id;
     const user = req.user;
 
     let ticket = null;
-
-    if (!ticket) {
-      return res.status(404).json({
-        error: "Ticket not found"
-      })
-    }
 
     if (user.role === "user") {
       ticket = await TicketModel.findOne({ createdBy: user._id, _id: ticketId });
     } else {
       ticket = await TicketModel.findById(ticketId)
         .populate("assignedTo", ["email", "_id"]);
+    }
+
+    if (!ticket) {
+      return res.status(404).json({
+        error: "Ticket not found"
+      })
     }
 
     return res.status(200).json({ ticket });
