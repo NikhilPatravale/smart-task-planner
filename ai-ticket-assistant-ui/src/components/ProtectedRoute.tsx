@@ -15,26 +15,50 @@ function ProtectedRoute({ children, isProtected }: PropsWithChildren & { isProte
     return loggedIn
       ? (
         <div>
-          <div className="navbar bg-base-100 shadow-sm block">
-            <div className="flex justify-between max-w-11/12 mx-auto">
-              <div className="flex gap-3 items-center">
-                <div className="flex-none">
-                  <button className="btn btn-square btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-5 w-5 stroke-current"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
-                  </button>
+          <div className="navbar bg-base-100 shadow-sm px-12">
+            <div className="flex-1 gap-2">
+              <a className="btn btn-ghost text-xl">Smart Ticket Manager</a>
+              <Link
+                to="/"
+                className={`ml-4 btn btn-ghost btn-sm ${location.pathname.endsWith("/") ? 'btn-active' : ''}`}
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/admin"
+                className={`ml-4 btn btn-ghost btn-sm ${location.pathname.endsWith("/admin") ? 'btn-active' : ''}`}
+              >
+                Admin
+              </Link>
+              <Link
+                className={`ml-4 btn btn-ghost btn-sm ${location.pathname.endsWith("/create-ticket") ? 'btn-active' : ''}`}
+                to="/create-ticket"
+              >
+                Create New Ticket
+              </Link>
+            </div>
+            <div className="flex gap-2">
+              <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
+              <div className="dropdown dropdown-end">
+                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  </div>
                 </div>
-                <Link to="/" className="btn btn-ghost text-xl">
-                  Dashboard
-                </Link>
-                <Link to="/admin" className="btn btn-ghost text-xl">
-                  Admin
-                </Link>
-                <button className="btn btn-sm btn-secondary">Create New Ticket</button>
-              </div>
-              <div className="w-12 avatar avatar-placeholder">
-                <div className="w-full bg-neutral text-neutral-content w-8 rounded-full">
-                  <span className="text-xl">D</span>
-                </div>
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                  <li>
+                    <a className="justify-between">
+                      Profile
+                      <span className="badge">New</span>
+                    </a>
+                  </li>
+                  <li><a>Settings</a></li>
+                  <li><a href="/logout">Logout</a></li>
+                </ul>
               </div>
             </div>
           </div>
@@ -44,7 +68,7 @@ function ProtectedRoute({ children, isProtected }: PropsWithChildren & { isProte
       : <Navigate to="/login" />
   }
 
-  return loggedIn ? <Navigate to="/" /> : children;
+  return loggedIn && !location.pathname.includes("/logout") ? <Navigate to="/" /> : children;
 }
 
 export default ProtectedRoute;

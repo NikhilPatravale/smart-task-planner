@@ -8,6 +8,9 @@ import AuthContextProvider from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
+import TicketDetails from './pages/TicketDetails';
+import TicketForm from './components/TicketForm';
+import Logout from './pages/Logout';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -24,10 +27,23 @@ createRoot(document.getElementById('root')!).render(
               <SignUp />
             </ProtectedRoute>
           } />
+          <Route path='/logout' element={
+            <ProtectedRoute isProtected={false}>
+              <Logout />
+            </ProtectedRoute>
+          } />
 
           <Route path='/' element={
             <ProtectedRoute isProtected={true}>
               <Tickets />
+            </ProtectedRoute>} />
+          <Route path='/ticket/:id' element={
+            <ProtectedRoute isProtected={true}>
+              <TicketDetails />
+            </ProtectedRoute>} />
+          <Route path='/create-ticket' element={
+            <ProtectedRoute isProtected={true}>
+              <TicketForm />
             </ProtectedRoute>} />
           <Route path='/admin' element={
             <ProtectedRoute isProtected={true}>
