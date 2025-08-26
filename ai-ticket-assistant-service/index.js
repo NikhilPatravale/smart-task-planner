@@ -34,6 +34,12 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use((req, res, next) => {
+  console.log("Incoming request:", req);
+  console.log("Incoming request url:", req.url);
+  console.log("Incoming request method:", req.method);
+  console.log("Incoming request body:", req.body);
+});
 
 const PORT = process.env.PORT || 8080;
 
