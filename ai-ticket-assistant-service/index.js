@@ -17,6 +17,8 @@ dotEnv.config();
 
 const app = express();
 
+const PORT = process.env.PORT || 8080;
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://smart-task-planner-ui.onrender.com"
@@ -35,6 +37,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.options("*", cors());
 app.head("/", (req, res) => res.sendStatus(200));
 app.use((req, res, next) => {
   console.log("Incoming request url:", req.url);
@@ -42,8 +46,6 @@ app.use((req, res, next) => {
   console.log("Incoming request body:", req.body);
   next();
 });
-
-const PORT = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
