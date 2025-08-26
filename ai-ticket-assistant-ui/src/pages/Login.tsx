@@ -21,7 +21,7 @@ function Login() {
     if (email === '' || password === '') return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+      const response = await fetch("https://smart-task-planner-service.onrender.com/api/v1/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {
