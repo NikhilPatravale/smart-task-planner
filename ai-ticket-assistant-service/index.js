@@ -40,6 +40,7 @@ app.use((req, res, next) => {
   console.log("Incoming request url:", req.url);
   console.log("Incoming request method:", req.method);
   console.log("Incoming request body:", req.body);
+  next();
 });
 
 const PORT = process.env.PORT || 8080;
