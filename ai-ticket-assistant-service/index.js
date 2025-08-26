@@ -38,8 +38,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.options("*", cors());
-app.head("/", (req, res) => res.sendStatus(200));
+app.options("/*", cors());
+app.head("/*", (req, res) => res.sendStatus(200));
 app.use((req, res, next) => {
   console.log("Incoming request url:", req.url);
   console.log("Incoming request method:", req.method);
