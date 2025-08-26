@@ -55,6 +55,8 @@ export const SignUp = async (req, res) => {
 };
 
 export const LogIn = async (req, res) => {
+  console.log("Login Controller:", req.body);
+
   const { email, password } = req.body;
 
   try {

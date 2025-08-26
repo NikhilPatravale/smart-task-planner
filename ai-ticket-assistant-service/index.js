@@ -33,13 +33,16 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"]
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.options("/*", cors());
-app.head("/*", (req, res) => res.sendStatus(200));
+app.options("/", cors());
+app.head("/", (req, res) => res.sendStatus(200));
 app.use((req, res, next) => {
   console.log("Incoming request url:", req.url);
   console.log("Incoming request method:", req.method);
@@ -59,6 +62,11 @@ app.use("/api/inngest", serve({
   client: inngest,
   functions: [onUserSignUp, onTicketCreation],
 }))
+
+app.use((req, res, next) => {
+  console.log("❌ No route matched:", req.method, req.originalUrl);
+  res.status(404).json({ error: "Route not found in Express" });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
