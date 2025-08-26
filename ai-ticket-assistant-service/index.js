@@ -16,8 +16,20 @@ import ticketRoutes from './routes/ticketRoutes.js';
 dotEnv.config();
 
 const app = express();
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://smart-task-planner-ui.onrender.com"
+]
+
 app.use(cors({
-  origin: process.env.APP_URL,
+  origin: function (origin, callBack) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callBack(null, true);
+    } else {
+      callBack(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
