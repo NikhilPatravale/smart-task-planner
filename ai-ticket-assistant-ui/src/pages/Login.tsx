@@ -1,10 +1,12 @@
 import { useState, type ChangeEvent, type ChangeEventHandler, type FormEventHandler } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange: ChangeEventHandler = (event: ChangeEvent<HTMLFormElement>) => {
     setForm(prev => ({
@@ -20,29 +22,13 @@ function Login() {
 
     if (email === '' || password === '') return;
 
-    try {
-      const response = await fetch("https://smart-task-planner-service.onrender.com/api/v1/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      });
+    const { status, message } = await login(email, password);
 
-      if (response.ok) {
-        setForm({ email: "", password: "" });
-        setError("");
-        navigate("/");
-      } else {
-        setError("Login failed. Please try again in sometime");
-      }
-    } catch (error) {
-      console.error("❌ Login failed", error);
-      setError("Login failed");
+    if (status === "success") {
+      setForm({ email: "", password: "" });
+      navigate("/");
+    } else {
+      setError(message);
     }
   };
 

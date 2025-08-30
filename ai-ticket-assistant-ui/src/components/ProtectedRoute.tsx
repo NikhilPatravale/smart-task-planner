@@ -1,18 +1,12 @@
-import { Link, Navigate, useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { useEffect, useState, type PropsWithChildren } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { type PropsWithChildren } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 function ProtectedRoute({ children, isProtected }: PropsWithChildren & { isProtected: boolean }) {
-  const token = Cookies.get("taskToken");
-  const location = useLocation();
-  const [loggedIn, setLoggedIn] = useState(token !== undefined);
-
-  useEffect(() => {
-    setLoggedIn(token !== undefined);
-  }, [token, location.pathname]);
+  const { accessToken, logout } = useAuth();
 
   if (isProtected) {
-    return loggedIn
+    return accessToken
       ? (
         <div>
           <div className="navbar bg-base-100 shadow-sm px-12">
@@ -57,7 +51,7 @@ function ProtectedRoute({ children, isProtected }: PropsWithChildren & { isProte
                     </a>
                   </li>
                   <li><a>Settings</a></li>
-                  <li><a href="/logout">Logout</a></li>
+                  <li><button onClick={logout}>Logout</button></li>
                 </ul>
               </div>
             </div>
@@ -68,7 +62,7 @@ function ProtectedRoute({ children, isProtected }: PropsWithChildren & { isProte
       : <Navigate to="/login" />
   }
 
-  return loggedIn && !location.pathname.includes("/logout") ? <Navigate to="/" /> : children;
+  return accessToken && !location.pathname.includes("/logout") ? <Navigate to="/" /> : children;
 }
 
 export default ProtectedRoute;
