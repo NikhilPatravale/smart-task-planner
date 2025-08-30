@@ -71,7 +71,7 @@ app.use((req, res, next) => {
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connection successful..");
-    app.listen(PORT, () => console.log(`🚀 Server listening at http://localhost:${PORT}`))
+    app.listen(PORT, () => console.log(`🚀 Server listening at PORT:${PORT}`))
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed...", err.message);

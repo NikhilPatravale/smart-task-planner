@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 export const authenticate = async (req, res, next) => {
   try {
-    const token = req.cookies.taskToken;
+    const token = req.cookies.refreshToken;
 
     if (!token) {
       return res.status(401).json({
@@ -10,7 +10,7 @@ export const authenticate = async (req, res, next) => {
       })
     }
 
-    const tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
+    const tokenPayload = jwt.verify(token, process.env.REFRESH_JWT_SECRET);
 
     req.user = tokenPayload;
     next();
