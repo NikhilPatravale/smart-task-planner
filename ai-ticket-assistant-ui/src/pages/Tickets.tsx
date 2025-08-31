@@ -3,7 +3,7 @@ import TicketList from "../components/TicketList";
 function Tickets() {
 
   return (
-    <div className="max-w-10/11 mx-auto mt-3">
+    <div className="flex-1 flex flex-col md:flex-row gap-6">
       <TicketList />
     </div>
   );

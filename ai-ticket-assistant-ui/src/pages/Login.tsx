@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type ChangeEventHandler, type FormEventHandler } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/Auth/AuthContext";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });

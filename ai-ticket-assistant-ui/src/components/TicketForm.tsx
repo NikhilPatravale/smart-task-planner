@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type ChangeEventHandler, type FormEvent, type FormEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
+import fetchWithAuth from "../utils/fetchWithAuth";
 
 function TicketForm() {
   const [form, setForm] = useState({ title: '', description: '' })
@@ -14,7 +15,7 @@ function TicketForm() {
     if (!title || !description) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/ticket`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/ticket`, {
         method: "POST",
         credentials: "include",
         headers: {

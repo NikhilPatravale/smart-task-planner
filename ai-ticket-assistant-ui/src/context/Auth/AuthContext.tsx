@@ -1,27 +1,28 @@
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import AuthService from '../../service/AuthService';
+import fetchWithAuth from "../../utils/fetchWithAuth";
 
-type LoginResultType = {
+type AuthResultType = {
   status: string;
   message: string;
 };
 
 type AuthContextState = {
-  accessToken: string;
-  logout: () => void;
-  login: (email: string, password: string) => Promise<LoginResultType>;
+  accessToken: string | null;
+  logout: () => Promise<AuthResultType>;
+  login: (email: string, password: string) => Promise<AuthResultType>;
 };
 
-
 const AuthContext = createContext<AuthContextState>({
-  accessToken: "",
-  logout: () => { },
+  accessToken: null,
+  logout: () => Promise.resolve({ status: "failed", message: "" }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   login: async (e: string, p: string) => Promise.resolve({ status: "failed", message: "" }),
 });
 
 export default function AuthContextProvider({ children }: PropsWithChildren) {
-  const [accessToken, setAccessToken] = useState<string>("");
+  const accessToken = AuthService.getAuth();
 
   useEffect(() => {
     (async function () {
@@ -32,7 +33,7 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
 
         if (response.ok) {
           const data = await response.json();
-          setAccessToken(data.accessToken);
+          AuthService.setAuth(data.accessToken);
         }
       } catch (error) {
         console.error("❌ Token refresh failed", error);
@@ -40,9 +41,9 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
     })();
   }, []);
 
-  const login = async (email: string, password: string): Promise<LoginResultType> => {
+  const login = async (email: string, password: string): Promise<AuthResultType> => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -56,7 +57,7 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
 
       if (response.ok) {
         const data = await response.json();
-        setAccessToken(data.accessToken);
+        AuthService.setAuth(data.accessToken);
         return { status: "success", message: "" }
       }
 
@@ -71,15 +72,19 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
 
   const logout = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
         credentials: "include",
       });
 
       if (response.ok) {
-        setAccessToken("");
+        AuthService.clearAuth();
+        return { status: "success", message: "" }
       }
+      return { status: "failed", message: "Logout failed" };
     } catch (error) {
       console.log("❌ Error during log out", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return { status: "failed", message: errorMessage };
     }
   };
 
