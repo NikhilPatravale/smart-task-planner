@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import AuthService from '../../service/AuthService';
 import fetchWithAuth from "../../utils/fetchWithAuth";
 
@@ -22,10 +22,17 @@ const AuthContext = createContext<AuthContextState>({
 });
 
 export default function AuthContextProvider({ children }: PropsWithChildren) {
+  const [authState, setAuthState] = useState({
+    isLoading: true,
+    error: null as string | null,
+  });
   const accessToken = AuthService.getAuth();
+
+  const { isLoading, error } = authState;
 
   useEffect(() => {
     (async function () {
+      AuthService.clearAuth();
       try {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/refresh`, {
           credentials: "include"
@@ -34,9 +41,15 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
         if (response.ok) {
           const data = await response.json();
           AuthService.setAuth(data.accessToken);
+          setAuthState({ isLoading: false, error: null });
+          return;
         }
+        console.log("❌ Token refresh failed", response.statusText);
+        setAuthState({ isLoading: false, error: "Some error occurred during authentication" });
       } catch (error) {
         console.error("❌ Token refresh failed", error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        setAuthState({ isLoading: false, error: errorMessage });
       }
     })();
   }, []);
@@ -87,6 +100,32 @@ export default function AuthContextProvider({ children }: PropsWithChildren) {
       return { status: "failed", message: errorMessage };
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        {import.meta.env.MODE === 'development' ? (
+          <div className="mb-4 text-red-600">Error: {error}</div>
+        ) : (
+          <div className="mb-4 text-red-600">An error occurred during authentication. Please try again.</div>
+        )}
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
 
   return (
     <AuthContext.Provider value={{ accessToken, logout, login }} >

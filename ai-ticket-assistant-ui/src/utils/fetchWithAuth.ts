@@ -11,9 +11,11 @@ const refreshToken = async () => {
       AuthService.setAuth(data.accessToken);
       return data.accessToken;
     }
+    AuthService.clearAuth();
     return null;
   } catch (error) {
     console.log(error);
+    AuthService.clearAuth();
     return null;
   }
 }
