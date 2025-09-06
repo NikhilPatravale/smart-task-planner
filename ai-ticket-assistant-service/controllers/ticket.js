@@ -1,4 +1,5 @@
 import TicketModel from "../models/Ticket.js";
+import UserModel from "../models/User.js";
 import { inngest } from "../inngest/client.js";
 
 export const CreateTicket = async (req, res) => {
@@ -40,11 +41,28 @@ export const CreateTicket = async (req, res) => {
 
 export const GetTickets = async (req, res) => {
   try {
-    const user = req.user;
+    const userId = req.userId;
+
+    console.log("Fetching tickets for user:", userId);
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
     let tickets = [];
 
-    if (user.role === "user") {
-      tickets = await TicketModel.find({ createdBy: user._id })
+    if (!user.role || user.role === "user") {
+      tickets = await TicketModel.find({
+        $or: [{
+          createdBy: user._id
+        }, {
+          assignedTo: user._id
+        }]
+      })
         .select("title description status createdAt assignedTo priority")
         .sort({ createdAt: -1 });
     } else {
@@ -53,7 +71,7 @@ export const GetTickets = async (req, res) => {
         .sort({ createdAt: -1 });
     }
 
-    return res.status(200).json({ tickets });
+    return res.status(200).json({ tickets, totalTickets: tickets.length });
   } catch (error) {
     console.error("❌ Error while fetching tickets");
     res.status(500).json({
