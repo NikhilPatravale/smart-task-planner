@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextState>({
   accessToken: null,
   logout: () => Promise.resolve({ status: "failed", message: "" }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  login: async (e: string, p: string) => Promise.resolve({ status: "failed", message: "" }),
+  login: async (_email: string, _password: string) => Promise.resolve({ status: "failed", message: "" }),
 });
 
 export default function AuthContextProvider({ children }: PropsWithChildren) {
