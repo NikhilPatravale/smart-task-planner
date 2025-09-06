@@ -18,3 +18,14 @@ export type Ticket = {
   relatedSkills: [string],
   createdAt: Date | null;
 };
+
+export type TicketsDataState = {
+  isLoading: boolean;
+  error: string | null;
+  tickets: Ticket[];
+};
+
+export type DataContextType = {
+  ticketsDataState: TicketsDataState;
+  addTicket: (ticket: Ticket) => void;
+};

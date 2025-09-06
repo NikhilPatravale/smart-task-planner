@@ -32,6 +32,21 @@ export default function Navbar() {
           </svg>
           <span className="text-gray-800">TicketFlow</span>
         </a>
+        <button className="btn bg-white text-black ml-16" onClick={() => navigate("/create-ticket")}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512">
+            <g>
+              <g>
+                <path d="M256,0C114.844,0,0,114.844,0,256c0,141.156,114.844,256,256,256s256-114.844,256-256C512,114.844,397.156,0,256,0z     M256,490.667C126.604,490.667,21.333,385.397,21.333,256C21.333,126.606,126.604,21.333,256,21.333    c129.396,0,234.667,105.272,234.667,234.667C490.667,385.397,385.396,490.667,256,490.667z" />
+              </g>
+            </g>
+            <g>
+              <g>
+                <polygon points="265.562,246.05 265.562,96.716 244.229,96.716 244.229,246.05 105.562,246.05 105.562,267.383 244.229,267.383     244.229,416.716 265.562,416.716 265.562,267.383 414.896,267.383 414.896,246.05   " />
+              </g>
+            </g>
+          </svg>
+          Create New Ticket
+        </button>
       </div>
       <div className="flex gap-6">
         <label className="swap swap-rotate">

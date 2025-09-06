@@ -1,10 +1,12 @@
 import { useState, type ChangeEvent, type ChangeEventHandler, type FormEvent, type FormEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 import fetchWithAuth from "../utils/fetchWithAuth";
+import { useDataContext } from "../context/Data/DataContext";
 
 function TicketForm() {
   const [form, setForm] = useState({ title: '', description: '' })
   const [error, setError] = useState("");
+  const { addTicket } = useDataContext();
   const navigate = useNavigate();
 
   const handleSubmit: FormEventHandler = async (e: FormEvent) => {
@@ -28,7 +30,9 @@ function TicketForm() {
       });
 
       if (response.ok) {
+        const { ticket } = await response.json();
         setForm({ title: '', description: '' });
+        addTicket(ticket);
         navigate("/");
       } else {
         setError("Something error occurred. Please try again.");
@@ -46,21 +50,10 @@ function TicketForm() {
     }))
   };
 
-  const closeForm = () => {
-    setForm({ title: '', description: '' });
-    navigate("/");
-  };
-
   return (
-    <div className="max-w-11/12 px-3 mx-auto mt-3 flex flex-col">
-      <button
-        className="btn btn-circle btn-neutral bg-white border-0 shadow-none"
-        onClick={closeForm}
-      >
-        <img src="/public/back-arrow.png" />
-      </button>
+    <div className="w-full max-w-6xl mx-auto px-15 pt-1 flex flex-col">
       <form
-        className="flex flex-col gap-3 mx-auto mt-5 w-full"
+        className="flex flex-col gap-5 mx-auto mt-5 w-full"
         onSubmit={handleSubmit}
       >
         <p className="text-2xl">Ticket Details</p>
