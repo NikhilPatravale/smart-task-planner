@@ -1,11 +1,17 @@
 import TicketModel from "../models/Ticket.js";
-import UserModel from "../models/User.js";
 import { inngest } from "../inngest/client.js";
 
 export const CreateTicket = async (req, res) => {
   try {
-    const { title, description } = req.body;
     const user = req.user;
+
+    if (!user) {
+      return res.status(404).json({
+        error: "❌ User not found"
+      });
+    }
+
+    const { title, description } = req.body;
 
     if (!title || !description) {
       return res.status(400).json({
@@ -41,15 +47,11 @@ export const CreateTicket = async (req, res) => {
 
 export const GetTickets = async (req, res) => {
   try {
-    const userId = req.userId;
-
-    console.log("Fetching tickets for user:", userId);
-
-    const user = await UserModel.findById(userId);
+    const user = req.user;
 
     if (!user) {
       return res.status(404).json({
-        error: "User not found"
+        error: "❌ User not found"
       });
     }
 
@@ -83,8 +85,15 @@ export const GetTickets = async (req, res) => {
 
 export const GetTicket = async (req, res) => {
   try {
-    const ticketId = req.params.id;
     const user = req.user;
+
+    if (!user) {
+      return res.status(404).json({
+        error: "❌ User not found"
+      });
+    }
+
+    const ticketId = req.params.id;
 
     let ticket = null;
 

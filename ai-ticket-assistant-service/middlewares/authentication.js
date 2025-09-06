@@ -13,7 +13,7 @@ export const authenticate = async (req, res, next) => {
     const tokenPayload = jwt.verify(token, process.env.REFRESH_JWT_SECRET);
     const { sub } = tokenPayload;
 
-    req.userId = sub;
+    req.user = sub;
     next();
   } catch (error) {
     return res.status(401).json({

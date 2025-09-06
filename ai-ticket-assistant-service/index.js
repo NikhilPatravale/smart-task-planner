@@ -21,6 +21,7 @@ const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:4173",
   "https://smart-task-planner-ui.onrender.com"
 ]
 

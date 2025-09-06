@@ -19,6 +19,9 @@ export const SignUp = async (req, res) => {
       role
     });
 
+    const plainUserObject = newUser.toObject();
+    delete plainUserObject.password;
+
     if (!newUser) {
       res.status(401).json({
         error: 'Signup failed',
@@ -34,7 +37,7 @@ export const SignUp = async (req, res) => {
 
     const jti = uuidV4();
 
-    const refreshToken = signRefreshToken(jti, newUser._id);
+    const refreshToken = signRefreshToken(jti, plainUserObject);
 
     await RefreshToken.create({
       jti,
@@ -100,18 +103,12 @@ export const LogIn = async (req, res) => {
       });
     }
 
-    // const token = jwt.sign(
-    //   {
-    //     id: user._id.toString(),
-    //     email: user.email,
-    //     role: user.role,
-    //   },
-    //   process.env.ACCESS_JWT_SECRET
-    // );
-
     const jti = uuidV4();
 
-    const refreshToken = signRefreshToken(jti, user._id);
+    const plainUserObject = user.toObject();
+    delete plainUserObject.password;
+
+    const refreshToken = signRefreshToken(jti, plainUserObject);
 
     await RefreshToken.create({
       jti,
@@ -172,20 +169,22 @@ export const Refresh = async (req, res) => {
     });
   }
 
-  const storedEntry = await RefreshToken.findOne({ jti: payload.jti, userId: payload.sub });
+  const storedEntry = await RefreshToken.findOne({ jti: payload.jti, userId: payload.sub._id });
 
-  const user = await UserModel.findById(payload.sub);
+  const user = await UserModel.findById(payload.sub._id).select("-password");
 
   if (!storedEntry || storedEntry.revoked || !user) {
-    await RefreshToken.updateMany({ userId: payload.sub }, { revoked: true });
+    await RefreshToken.updateMany({ userId: payload.sub._id }, { revoked: true });
     return res.status(401).json({
       message: "Refresh token revoked"
     });
   }
 
   const newJti = uuidV4();
+  const plainUserObject = user.toObject();
+  delete plainUserObject.password;
 
-  const newRefreshToken = signRefreshToken(newJti, user._id);
+  const newRefreshToken = signRefreshToken(newJti, plainUserObject);
 
   await RefreshToken.create({
     jti: newJti,
@@ -231,7 +230,7 @@ export const LogOut = async (req, res) => {
     if (refreshToken) {
       try {
         const payload = jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET);
-        await RefreshToken.updateOne({ jti: payload.jti, userId: payload.sub }, { revoked: true });
+        await RefreshToken.updateOne({ jti: payload.jti, userId: payload.sub._id }, { revoked: true });
       } catch (e) { }
     }
 

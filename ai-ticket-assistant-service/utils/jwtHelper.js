@@ -6,8 +6,8 @@ export const signAccessToken = (user) => {
   );
 };
 
-export const signRefreshToken = (jti, userId) => {
+export const signRefreshToken = (jti, user) => {
   return jwt.sign(
-    { jti, sub: userId }, process.env.REFRESH_JWT_SECRET
+    { jti, sub: user }, process.env.REFRESH_JWT_SECRET
   );
 };
