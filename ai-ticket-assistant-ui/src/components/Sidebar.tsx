@@ -38,7 +38,7 @@ export default function Sidebar() {
   }, [tickets]);
 
   return (
-    <div className="w-64 bg-gray-100 p-4 shadow-sm flex flex-col justify-between border-r-gray-400">
+    <div className="hidden md:flex w-64 bg-gray-100 p-4 shadow-sm  flex-col justify-between border-r-gray-400">
       <ul className="menu text-base font-semibold w-full">
         <li>
           <Link to="/" className="bg-primary text-white">Dashboard</Link>

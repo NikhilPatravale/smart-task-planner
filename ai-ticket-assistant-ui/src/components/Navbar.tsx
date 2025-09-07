@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/Auth/AuthContext";
 import { useTheme } from "../context/Theme/ThemeContext";
 
@@ -16,8 +16,8 @@ export default function Navbar() {
 
   return (
     <div className="navbar bg-white shadow-sm p-4 m-0">
-      <div className="flex-1">
-        <a className="btn btn-ghost text-xl font-bold text-gray-800 items-center gap-2">
+      <div className="flex-1 flex justify-start">
+        <Link to="/" className="btn btn-ghost text-xl font-bold text-gray-800 items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -30,9 +30,9 @@ export default function Navbar() {
               clipRule="evenodd"
             />
           </svg>
-          <span className="text-gray-800">TicketFlow</span>
-        </a>
-        <button className="btn bg-white text-black ml-16" onClick={() => navigate("/create-ticket")}>
+          <span className="hidden md:inline-block text-gray-800">TicketFlow</span>
+        </Link>
+        <button className="hidden md:inline-flex btn bg-white text-black ml-16" onClick={() => navigate("/create-ticket")}>
           <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="20px" width="20px" version="1.1" id="Layer_1" viewBox="0 0 512 512">
             <g>
               <g>
@@ -47,6 +47,21 @@ export default function Navbar() {
           </svg>
           Create New Ticket
         </button>
+        <div className="inline-flex md:hidden">
+          <div className="dropdown dropdown-end">
+            <button tabIndex={0} className="btn btn-square btn-ghost">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-5 w-5 stroke-current"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg>
+            </button>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content gap-3 left-1 scale-200 font-medium bg-gray-300 w-60 rounded-box z-1 mt-3 p-3 shadow">
+              <li><Link to="/">Dashboard</Link></li>
+              <li><Link to="/tickets">Tickets</Link></li>
+              <li><Link to="/users">Users</Link></li>
+              <li><Link to="/settings">Settings</Link></li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div className="flex gap-6">
         <label className="swap swap-rotate">
@@ -78,7 +93,7 @@ export default function Navbar() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 opacity-70 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input type="text" className="w-full bg-transparent text-sm focus:outline-none" placeholder="Search..." />
+            <input type="text" className="w-20 lg:w-full bg-transparent text-sm focus:outline-none" placeholder="Search..." />
           </div>
         </div>
       </div>
