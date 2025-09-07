@@ -10,7 +10,6 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import TicketDetails from './pages/TicketDetails';
 import TicketForm from './components/TicketForm';
-import Logout from './pages/Logout';
 import ThemeContextProvider from './context/Theme/ThemeContext';
 
 createRoot(document.getElementById('root')!).render(
@@ -27,11 +26,6 @@ createRoot(document.getElementById('root')!).render(
             <Route path='/signup' element={
               <ProtectedRoute isProtected={false}>
                 <SignUp />
-              </ProtectedRoute>
-            } />
-            <Route path='/logout' element={
-              <ProtectedRoute isProtected={false}>
-                <Logout />
               </ProtectedRoute>
             } />
 
